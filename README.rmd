@@ -1,9 +1,16 @@
-Shots by Top 8 Players
-================
-Kit Applegate
-2023-07-03
+---
+title: "Shots by Top 8 Players"
+author: "Kit Applegate"
+date: "2023-07-03"
+output: github_document
+---
 
-``` r
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r Libraries, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(ggpubr)
 library(data.table)
@@ -13,9 +20,11 @@ rink <- png::readPNG("rinkDiagram.png")
 shots <- fread("Data/shots.csv")
 
 skaters <- fread("Data/skatersAll.csv")
+
 ```
 
-``` r
+
+```{r Play table, echo=TRUE, fig.width=1200, message=FALSE, warning=FALSE, paged.print=FALSE}
 shots.filter <- shots %>%
   filter(season > 2017) %>%
   select( "game_id", "season", "team", "location", "event",
@@ -54,24 +63,13 @@ top_players <- shots.Player.Join %>%
 top_player_list <- as.list(top_players$shooterName)
 
 top_players
+  
 ```
 
-    ## # A tibble: 8 × 12
-    ## # Groups:   shooterName, SkaterTeam [8]
-    ##   shooterName      SkaterTeam position Goals Misses Shots Ice.AVG Shot.Dist.AVG
-    ##   <chr>            <chr>      <chr>    <int>  <int> <int>   <dbl>         <dbl>
-    ## 1 Leon Draisaitl   EDM        C          256    471  1012      50            26
-    ## 2 Auston Matthews  TOR        C          242    639  1369      40            27
-    ## 3 Connor McDavid   EDM        C          239    409  1213      46            22
-    ## 4 David Pastrnak   BOS        R          234    624  1419      38            33
-    ## 5 Alex Ovechkin    WSH        L          225    675  1320      47            35
-    ## 6 Nathan MacKinnon COL        C          211    542  1661      44            32
-    ## 7 Mikko Rantanen   COL        R          201    481  1038      42            29
-    ## 8 Brayden Point    T.B        C          200    382   835      41            22
-    ## # ℹ 4 more variables: goal.Percentage <dbl>, Blocked <int>, Successful <int>,
-    ## #   Accuracy <dbl>
 
-``` r
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 shots.filter %>%
   filter(shooterName %in% top_player_list, 
          event == "GOAL") %>%
@@ -85,11 +83,11 @@ shots.filter %>%
        y = "", 
        color = "Player Name") +
   ylim(-42,42) 
+
+
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
-
-``` r
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 shots.filter %>%
   filter(shooterName %in% top_player_list, 
          event == "MISS") %>%
@@ -105,9 +103,8 @@ shots.filter %>%
   ylim(-42,42)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
-``` r
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 shots.filter %>%
   filter(event == "GOAL", 
          shooterName %in% top_player_list) %>%
@@ -123,4 +120,5 @@ shots.filter %>%
   ylim(-42,42) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+
