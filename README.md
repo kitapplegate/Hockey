@@ -3,6 +3,19 @@ Shots by Top 8 Players
 Kit Applegate
 2023-07-03
 
+The provided code analyzes hockey shot data by filtering and joining
+datasets, calculating statistics, and creating visualizations. It begins
+by loading necessary libraries and datasets. The code then filters and
+selects specific columns from the datasets, joins them based on the
+shooter’s name, and removes duplicates. Statistical calculations are
+performed on the joined dataset, grouping data by shooter’s name, team,
+and position. The top 8 players with the most goals are selected, and
+their shot locations resulting in goals, missed shots, and left/right
+shot distribution are visualized using plots. Overall, the code provides
+insights into the shooting performance of top goal-scoring players,
+showcasing goal locations, missed shots, and the distribution of
+left/right shots.
+
 ``` r
 library(tidyverse)
 library(ggpubr)

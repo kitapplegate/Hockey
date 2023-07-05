@@ -5,10 +5,12 @@ date: "2023-07-03"
 output: github_document
 ---
 
+The provided code analyzes hockey shot data by filtering and joining datasets, calculating statistics, and creating visualizations. It begins by loading necessary libraries and datasets. The code then filters and selects specific columns from the datasets, joins them based on the shooter's name, and removes duplicates. Statistical calculations are performed on the joined dataset, grouping data by shooter's name, team, and position. The top 8 players with the most goals are selected, and their shot locations resulting in goals, missed shots, and left/right shot distribution are visualized using plots. Overall, the code provides insights into the shooting performance of top goal-scoring players, showcasing goal locations, missed shots, and the distribution of left/right shots.
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
 
 ```{r Libraries, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -22,7 +24,6 @@ shots <- fread("Data/shots.csv")
 skaters <- fread("Data/skatersAll.csv")
 
 ```
-
 
 ```{r Play table, echo=TRUE, fig.width=1200, message=FALSE, warning=FALSE, paged.print=FALSE}
 shots.filter <- shots %>%
@@ -66,9 +67,6 @@ top_players
   
 ```
 
-
-
-
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 shots.filter %>%
   filter(shooterName %in% top_player_list, 
@@ -103,7 +101,6 @@ shots.filter %>%
   ylim(-42,42)
 ```
 
-
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 shots.filter %>%
   filter(event == "GOAL", 
@@ -120,5 +117,19 @@ shots.filter %>%
   ylim(-42,42) 
 ```
 
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+all_Players <- shots.Player.Join %>%
+  group_by(shooterName, SkaterTeam, position) %>%
+  summarise(Goals = sum(event == "GOAL"), 
+            Misses = sum(event == "MISS"), 
+            Shots = sum(event == "SHOT"), 
+            Ice.AVG = round(mean(shooterTimeOnIce), 0), 
+            Shot.Dist.AVG = round(mean(shotDistance), 0),
+            goal.Percentage = round((Goals / Shots) * 100, 2), 
+            Blocked = Shots - (Goals + Misses),
+            Successful = Goals + Blocked, 
+            Accuracy = (Successful / Shots) * 100 ) %>%
+  arrange(desc(Goals)) 
 
-
+write.csv(all_Players, file = "player.Stats.csv", row.names = FALSE)
+```
